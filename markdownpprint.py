@@ -32,7 +32,7 @@ def main(fname):
 
         #writing this to the file in the right place
         with open(fname,'w') as mdfile:
-            md = md[:eq.end()] + r'\n```' + prettystring + r'\n```' + md[eq.end():]
+            md = md[:eq.end()] + '\n```\n' + prettystring + '\n```\n' + md[eq.end():]
             mdfile.write(md)
 
         #search again from new position
