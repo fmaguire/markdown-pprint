@@ -54,3 +54,8 @@ You can also get verbose output on what equations are being processed by using -
 ```
 ./markdownpprint -v <filename.md>
 ```
+
+Unit tests can be run by invoking the following in the main repository directory:
+```
+nosetests
+```
