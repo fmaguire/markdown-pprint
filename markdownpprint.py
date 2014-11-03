@@ -3,7 +3,7 @@
 import sympy
 import re
 
-def main(fname):
+def main(fname,verbose=False):
     with open(fname) as mdfile:
         md = mdfile.read()
     r = re.compile('<!---sympy.*--->')
@@ -12,9 +12,11 @@ def main(fname):
     eq = r.search(md[position:])
     while eq != None:
         #update current position
-        position = eq.end()
+        position = position + eq.end()
         # extract the sympy expression with some crude splitting
         expression = eq.group().split('sympy')[-1].split('--->')[0]
+        if verbose:
+            print('found equation {0} at position {1}'.format(expression,position))
         # interpret that expression with sympy
         # first have to define whatever symbols in there as variables
         varfd = re.compile(r'[a-z]',re.IGNORECASE)
@@ -31,8 +33,8 @@ def main(fname):
         prettystring = sympy.pretty(ns['symeq'])
 
         #writing this to the file in the right place
-        with open(fname,'w') as mdfile:
-            md = md[:eq.end()] + '\n```\n' + prettystring + '\n```\n' + md[eq.end():]
+        with open(fname+'.test','w') as mdfile:
+            md = md[:position] + '\n```\n' + prettystring + '\n```\n' + md[position:]
             mdfile.write(md)
 
         #search again from new position
