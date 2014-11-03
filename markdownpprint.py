@@ -2,6 +2,7 @@
 
 import sympy
 import re
+from optparse import OptionParser
 
 def main(fname,verbose=False):
     with open(fname) as mdfile:
@@ -33,7 +34,7 @@ def main(fname,verbose=False):
         prettystring = sympy.pretty(ns['symeq'])
 
         #writing this to the file in the right place
-        with open(fname+'.test','w') as mdfile:
+        with open(fname,'w') as mdfile:
             md = md[:position] + '\n```\n' + prettystring + '\n```\n' + md[position:]
             mdfile.write(md)
 
@@ -42,6 +43,9 @@ def main(fname,verbose=False):
     return None
 
 if __name__ == '__main__':
-
-
-    main()
+    parser = OptionParser()
+    parser.add_option("-v", "--verbose",
+            action="store_true", dest="verbose", default=False,
+            help="print verbose status during processing")
+    (options,args) = parser.parse_args()
+    main(args[0],verbose=options.verbose)
