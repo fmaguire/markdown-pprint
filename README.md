@@ -36,6 +36,9 @@ This doesn't do anything clever and is only designed to be run only in batch at 
 It will, for example, generate double equations if you run it over a file twice.
 
 I would have preferred it parse stand markdown latex syntax, but it was more difficult to parse that into sympy for the pretty printer.
+It looks like [there are ways to do this][stack], but I haven't figured out an easy way to implement them here yet.
+
+[stack]: https://stackoverflow.com/questions/15805882/convert-a-latex-formula-to-a-type-that-can-be-used-inside-sympy
 
 Usage
 -----
