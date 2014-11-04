@@ -17,7 +17,7 @@ def main(fname, streaming=False, verbose=False):
     # regex for finding status information
     rst = re.compile('<!---status(.*?)--->')
     # regex for finding code blocks (hopefully with equations in them
-    rcb = re.compile('.```(.*?)```.',re.DOTALL)
+    rcb = re.compile('.```(.*?)```..',re.DOTALL)
     # iterate, finding all equations and adding a pprint section after them
 
     position = 0
@@ -49,8 +49,6 @@ def main(fname, streaming=False, verbose=False):
 
                 # equation must be changed, so remove the equation
                 codeblock = rcb.search(md[position:])
-                print("removing: "+codeblock.group())
-                print("removing: "+status.group())
                 md = md[:position+codeblock.start()] + md[position+codeblock.end():]
                 # status must also be overwritten, so remove that as well
                 md = md[:position+status.start()] + md[position+status.end():]
@@ -68,10 +66,10 @@ def main(fname, streaming=False, verbose=False):
             # add statuscontent to md
             statuscontent = ' '.join(statuscontent)
             md = md[:position] + '\n' + statuscontent \
-                        + '\n' + md[position:]
+                        + md[position:]
 
             # update position
-            position = position + len(statuscontent) + 1
+            position = position + len(statuscontent) +1
 
             # parse string as sympy expression
             # might be worth adding a local dict of symbols too
