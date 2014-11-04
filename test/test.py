@@ -5,6 +5,7 @@ import markdownpprint as mdpp
 import os
 import sys
 import shutil
+import re
 
 class TestConversion(unittest.TestCase):
     '''
@@ -89,7 +90,7 @@ class TestConversion(unittest.TestCase):
         # clean up input file copy
         os.remove(self.test_input_copy)
 
-    def test_status_options(self):
+    def test_status(self):
         '''
         Tests the status parsing ability
         '''
@@ -108,9 +109,9 @@ class TestConversion(unittest.TestCase):
             mdpp_input = mdpp_out_fh.read()
 
         # check how many equations are in there
-        r = re.compile("```")
+        r = re.compile("```(.*?)```",re.DOTALL)
         eqenvs = r.findall(mdpp_input)
-        self.assertEqual(len(eqenvs),4)
+        self.assertEqual(len(eqenvs),2)
 
         # clean up input file copy
         os.remove(self.test_input_copy)

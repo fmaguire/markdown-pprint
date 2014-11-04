@@ -11,11 +11,13 @@ def main(fname, streaming=False, verbose=False):
     with open(fname) as mdfile:
         md = mdfile.read()
     # regex for finding sympy blocks 
-    r = re.compile('<!---sympy(.*)--->')
+    r = re.compile('<!---sympy(.*?)--->')
     # regex for finding what is on the next line
     nl = re.compile(r'\n(.*)\n')
     # regex for finding status information
-    rst = re.compile('<!---status(.*)--->')
+    rst = re.compile('<!---status(.*?)--->')
+    # regex for finding code blocks (hopefully with equations in them
+    rcb = re.compile('.```(.*?)```.',re.DOTALL)
     # iterate, finding all equations and adding a pprint section after them
 
     position = 0
@@ -24,11 +26,14 @@ def main(fname, streaming=False, verbose=False):
     while eq is not None:
         # update current position
         position = position + eq.end()
-        # reset flag
+        # reset flags
         regenflag = True
 
+        # extract the sympy expression
+        expression = eq.groups()[0]
+
         # hash current equation    
-        h = hashlib.md5(eq.encode('utf-8'))
+        h = hashlib.md5(expression.encode('utf-8'))
 
         # check the next line for status information
         nextline = nl.search(md[position:])
@@ -40,32 +45,36 @@ def main(fname, streaming=False, verbose=False):
             # check status against current equation
             if h.hexdigest() == statushash:
                 regenflag = False
-            # update hash
-            statuscontent[1] = h.hexdigest()
+            else:
+
+                # equation must be changed, so remove the equation
+                codeblock = rcb.search(md[position:])
+                print("removing: "+codeblock.group())
+                print("removing: "+status.group())
+                md = md[:position+codeblock.start()] + md[position+codeblock.end():]
+                # status must also be overwritten, so remove that as well
+                md = md[:position+status.start()] + md[position+status.end():]
+                # update hash
+                statuscontent[1] = h.hexdigest()
         else:
             # create status
             statuscontent = ["<!---status",h.hexdigest(),"--->"]
 
-        # add statuscontent to md
-        statuscontent = ' '.join(statuscontent)
-        md = md[:position] + '\n' + statuscontent \
-                    + '\n' + md[position:]
-
-        # update position
-        position = position + len(statuscontent) + 4
-
-        # extract the sympy expression
-        expression = eq.groups()[0]
-
         if verbose:
             print('found equation {0} at position {1}'.format(expression,
                                                               position))
-
         # regenerate if flag is set:
         if regenflag:
+            # add statuscontent to md
+            statuscontent = ' '.join(statuscontent)
+            md = md[:position] + '\n' + statuscontent \
+                        + '\n' + md[position:]
+
+            # update position
+            position = position + len(statuscontent) + 1
+
             # parse string as sympy expression
-            # might be worth adding a local dict of symbols to
-            # parse_expr but this seems to work fine
+            # might be worth adding a local dict of symbols too
             symeq_obj = sympy.sympify(expression)
 
             # then we can make the pretty string:
