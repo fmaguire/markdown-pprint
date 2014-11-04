@@ -55,7 +55,14 @@ You can also get verbose output on what equations are being processed by using -
 ./markdownpprint -v <filename.md>
 ```
 
-Unit tests can be run by invoking the following in the main repository directory:
+Or run the program in streaming mode which sends output to stdout and doesn't modify the input file:
+
 ```
-nosetests
+./mardownpprint -s <filename.md>
+```
+
+Unit tests can be run by invoking the following in the test directory:
+
+```
+./test.py
 ```
