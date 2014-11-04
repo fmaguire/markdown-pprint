@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import sympy
-import sympy.parsing.sympy_parser as sp
 import re
 import sys
 from optparse import OptionParser
@@ -31,7 +30,7 @@ def main(fname, streaming=False, verbose=False):
         # parse string as sympy expression
         # might be worth adding a local dict of symbols to
         # parse_expr but this seems to work fine
-        symeq_obj = sp.parse_expr(expression)
+        symeq_obj = sympy.sympify(expression)
 
         # then we can make the pretty string:
         prettystring = sympy.pretty(symeq_obj)
