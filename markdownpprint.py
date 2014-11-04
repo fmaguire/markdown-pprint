@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sympy
+import sympy.parsing.sympy_parser as sp
 import re
 from optparse import OptionParser
 
@@ -26,27 +27,13 @@ def main(fname, verbose=False):
             print('found equation {0} at position {1}'.format(expression,
                                                               position))
 
-        # interpret that expression with sympy
-        # first have to define whatever symbols in there as variables
-        varfd = re.compile(r'[a-z]', re.IGNORECASE)
-        variables = varfd.findall(expression)
-
-        # this line is complete hack
-        ns = locals()
-
-        code = compile('import sympy', '<string>', 'exec')
-        exec(code, ns)
-
-        code = compile(', '.join(
-            variables) + ' = sympy.symbols("{0}")'.format(' '.join(
-                variables)), '<string>', 'exec')
-        exec(code, ns)
-
-        code = compile('symeq = ' + expression, '<string>', 'exec')
-        exec(code, ns)
+        # parse string as sympy expression
+        # might be worth adding a local dict of symbols to
+        # parse_expr
+        symeq_obj = sp.parse_expr(expression)
 
         # then we can make the pretty string:
-        prettystring = sympy.pretty(ns['symeq'])
+        prettystring = sympy.pretty(symeq_obj)
 
         # writing this to the file in the right place
         with open(fname, 'w') as mdfile:
