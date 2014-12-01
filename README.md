@@ -61,8 +61,8 @@ Or run the program in streaming mode which sends output to stdout and doesn't mo
 ./mardownpprint -s <filename.md>
 ```
 
-Unit tests can be run by invoking the following in the test directory:
+Unit tests can be run by invoking the following in the main directory:
 
 ```
-./test.py
+.test/test.py
 ```

@@ -16,9 +16,9 @@ class TestConversion(unittest.TestCase):
         As static mode changes file need to copy test input to check conversion
         without needing to remake test files
         '''
-        self.test_input = 'test_input.md'
-        self.test_output = 'test_output.md'
-        self.test_input_copy = 'test_input_copy.md'
+        self.test_input = os.path.join('test','test_input.md')
+        self.test_output = os.path.join('test','test_output.md')
+        self.test_input_copy = os.path.join('test', 'test_input_copy.md')
 
     def test_static(self):
         '''
