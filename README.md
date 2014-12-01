@@ -89,5 +89,5 @@ Or run the program in streaming mode which sends output to stdout and doesn't mo
 Unit tests can be run by invoking the following in the main directory:
 
 ```
-.test/test.py
+./test/test.py
 ```

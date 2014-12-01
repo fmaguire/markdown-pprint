@@ -4,13 +4,13 @@ import sympy
 import re
 import sys
 import hashlib
-from optparse import OptionParser
+import argparse
 
 
 def main(fname, streaming=False, verbose=False):
     with open(fname) as mdfile:
         md = mdfile.read()
-    # regex for finding sympy blocks 
+    # regex for finding sympy blocks
     r = re.compile('<!---sympy(.*?)--->')
     # regex for finding what is on the next line
     nl = re.compile(r'\n(.*)\n')
@@ -32,7 +32,7 @@ def main(fname, streaming=False, verbose=False):
         # extract the sympy expression
         expression = eq.groups()[0]
 
-        # hash current equation    
+        # hash current equation
         h = hashlib.md5(expression.encode('utf-8'))
 
         # check the next line for status information
@@ -96,23 +96,26 @@ def main(fname, streaming=False, verbose=False):
 
 if __name__ == '__main__':
 
-    parser = OptionParser()
+    parser = argparse.ArgumentParser(description="Pretty print mathematical "
+                                                 "terms in markdown")
+    parser.add_argument("-v", "--verbose",
+                        action="store_true",
+                        dest="verbose",
+                        default=False,
+                        help="Print verbose status during processing"
+                             " (default=%(default)s)")
 
-    parser.add_option("-v", "--verbose",
-                      action="store_true",
-                      dest="verbose",
-                      default=False,
-                      help="Print verbose status during processing"
-                           " (default=False)")
+    parser.add_argument("-s", "--stream",
+                        action="store_true",
+                        dest="streaming",
+                        default=False,
+                        help="Run markdownpp in streaming mode"
+                           " (default=$(default)s)")
 
-    parser.add_option("-s", "--stream",
-                      action="store_true",
-                      dest="streaming",
-                      default=False,
-                      help="Run markdownpp in streaming mode"
-                           " (default=False)")
+    parser.add_argument('input_file',
+                        type=str,
+                        help='Input filename')
 
+    args = parser.parse_args()
 
-    (opts, args) = parser.parse_args()
-
-    main(args[0], streaming=opts.streaming, verbose=opts.verbose)
+    main(args.input_file, streaming=args.streaming, verbose=args.verbose)
