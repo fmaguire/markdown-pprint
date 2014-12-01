@@ -1,6 +1,8 @@
 markdown-pprint
 ===============
 
+[![Build Status](https://travis-ci.org/fmaguire/markdown-pprint.svg?branch=master)](https://travis-ci.org/fmaguire/markdown-pprint)
+
 A pretty printer for equations in markdown where MathJax isn't supported, such as on the github wiki pages.
 Uses Sympy so math commands have to be in Sympy style in the following way:
 
