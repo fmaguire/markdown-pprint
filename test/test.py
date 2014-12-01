@@ -5,6 +5,7 @@ import markdownpprint as mdpp
 import os
 import sys
 import shutil
+import re
 
 class TestConversion(unittest.TestCase):
     '''
@@ -85,6 +86,32 @@ class TestConversion(unittest.TestCase):
 
         # assert stdout is same as test output
         self.assertMultiLineEqual(mdpp_stdout + '\n', test_output)
+
+        # clean up input file copy
+        os.remove(self.test_input_copy)
+
+    def test_status(self):
+        '''
+        Tests the status parsing ability
+        '''
+        # if it works, should not produce two copies of equations
+        
+        # copy input file in case it does change
+        shutil.copy(self.test_input, self.test_input_copy)
+        
+        # run main 
+        mdpp.main(self.test_input_copy)
+        # run main again
+        mdpp.main(self.test_input_copy)
+
+        # parse test output (which is input)
+        with open(self.test_input_copy, 'r') as mdpp_out_fh:
+            mdpp_input = mdpp_out_fh.read()
+
+        # check how many equations are in there
+        r = re.compile("```(.*?)```",re.DOTALL)
+        eqenvs = r.findall(mdpp_input)
+        self.assertEqual(len(eqenvs),2)
 
         # clean up input file copy
         os.remove(self.test_input_copy)

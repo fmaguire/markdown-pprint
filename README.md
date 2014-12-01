@@ -32,6 +32,31 @@ Produces:
   2        2
 ```
 
+Can also work with equations, but the equals sign isn't supported.
+If you want to write an equations you have to use the `Eq(left,right)` expression:
+
+```
+<!---sympy Eq(H(X,Y),Sum(P(x,y)*log(1/P(x,y)),(x,a_X,A_X),(y,a_Y,A_Y))) --->
+```
+
+Produces:
+
+<!---sympy Eq(H(X,Y),Sum(P(x,y)*log(1/P(x,y)),(x,a_X,A_X),(y,a_Y,A_Y))) --->
+```
+            A_Y     A_X                       
+            ____    ____                      
+            ╲       ╲                         
+             ╲       ╲               ⎛   1   ⎞
+              ╲       ╲   P(x, y)⋅log⎜───────⎟
+H(X, Y) =     ╱       ╱              ⎝P(x, y)⎠
+             ╱       ╱                        
+            ╱       ╱                         
+            ‾‾‾‾    ‾‾‾‾                      
+          y = a_Y x = a_X                     
+```
+
+Which illustrates a couple of problems with subscript and the sum notation being crude at the moment.
+
 This doesn't do anything clever and is only designed to be run only in batch at the moment.
 It will, for example, generate double equations if you run it over a file twice.
 
